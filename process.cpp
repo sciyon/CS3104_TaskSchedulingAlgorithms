@@ -19,19 +19,48 @@ void initTable(int numProcesses, vector<Process>& processes)
     printTable(processes);
 }
 
+void initTablePrio(int numProcesses, vector<Process>& processes) 
+{
+    // Shows and updates the table while inputting the values for arrival time and burst time
+    for(int p = 0; p < numProcesses; p++) {
+        system("cls");
+        printTablePrio(processes);
+        
+        // Input values for arrival time and burst time
+        cout << "P" << p + 1 << ": Enter Arrival time, Burst time and Priority number: ";
+        cin >> processes[p].arrivalTime >> processes[p].burstTime >> processes[p].prioNum;
+        processes[p].remainingBurstTime = processes[p].burstTime; // Initialize remaining burst time
+    }
+
+    system("cls");
+    printTablePrio(processes);
+}
+
 void printTable(vector<Process>& processes) 
 {
-    for (int p = 0; p < processes.size(); p++) {
+    for(int p = 0; p < processes.size(); p++) {
         char label = 'A' + p;
         processes[p].label = label; // Set the process labels
     }
 
     cout << setw(10) << "Process" << std::setw(15) << "Arrival Time" << std::setw(15) << "Burst Time" << std::endl;
-    for (const Process& process : processes) {
+    for(const Process& process : processes) {
         cout << setw(10) << process.label << setw(15) << process.arrivalTime << setw(15) << process.burstTime << endl;
     }
 }
 
+void printTablePrio(vector<Process>& processes) 
+{
+    for(int p = 0; p < processes.size(); p++) {
+        char label = 'A' + p;
+        processes[p].label = label; // Set the process labels
+    }
+
+    cout << setw(10) << "Process" << std::setw(15) << "Arrival Time" << std::setw(15) << "Burst Time" << std::setw(15) << "Priority Number" << std::endl;
+    for(const Process& process : processes) {
+        cout << setw(10) << process.label << setw(15) << process.arrivalTime << setw(15) << process.burstTime << setw(15) << process.prioNum << endl;
+    }
+}
 
 void printResultTable(const vector<Process>& processes) 
 {
@@ -39,8 +68,20 @@ void printResultTable(const vector<Process>& processes)
     cout << setw(10) << "Process" << setw(15) << "Arrival Time" << setw(15) << "Burst Time"
          << setw(15) << "End Time" << setw(17) << "Turnaround Time" << setw(15) << "Wait Time" << endl;
 
-    for (const Process& process : processes) {
+    for(const Process& process : processes) {
         cout << setw(10) << process.label << setw(15) << process.arrivalTime << setw(15) << process.burstTime
+             << setw(15) << process.endTime << setw(17) << process.turnaroundTime << setw(15) << process.waitTime << endl;
+    }
+}
+
+void printResultTablePrio(const vector<Process>& processes) 
+{
+    cout << "\nResult Table:\n";
+    cout << setw(10) << "Process" << setw(15) << "Arrival Time" << setw(15) << "Burst Time" << setw(15) << "Priority"
+         << setw(15) << "End Time" << setw(17) << "Turnaround Time" << setw(15) << "Wait Time" << endl;
+
+    for(const Process& process : processes) {
+        cout << setw(10) << process.label << setw(15) << process.arrivalTime << setw(15) << process.burstTime << setw(15) << process.prioNum
              << setw(15) << process.endTime << setw(17) << process.turnaroundTime << setw(15) << process.waitTime << endl;
     }
 }
@@ -56,13 +97,13 @@ int findShortestRemainingTimeProcess(const vector<Process>& processes, int curre
     int shortestTime = INT_MAX;
     int nextProcess = -1;
 
-    for (unsigned p = 0; p < processes.size(); p++) {
+    for(unsigned p = 0; p < processes.size(); p++) {
     	// Check if the process has arrived, its remaining burst time is shorter, and it has remaining work to be done
-        if (processes[p].arrivalTime <= currentTime && processes[p].remainingBurstTime < shortestTime &&
+        if(processes[p].arrivalTime <= currentTime && processes[p].remainingBurstTime < shortestTime &&
 		    processes[p].remainingBurstTime > 0) {
 		    
 		    // Check if the current process has a shorter burst time or if its arrival time is lower
-		    if (processes[p].remainingBurstTime < shortestTime ||
+		    if(processes[p].remainingBurstTime < shortestTime ||
 		        (processes[p].remainingBurstTime == shortestTime && 
 		        processes[p].arrivalTime < processes[nextProcess].arrivalTime)) {
 		        
@@ -74,6 +115,33 @@ int findShortestRemainingTimeProcess(const vector<Process>& processes, int curre
     }
 
     return nextProcess;
+}
+
+// Function to find the process with the highest priority among available processes
+int findHighestPriorityProcess(const vector<Process>& processes, int currentTime)
+{
+	int highestPriority = INT_MAX;
+	int nextProcess = -1;
+	
+	for(unsigned p = 0; p < processes.size(); p++) {
+		// Check if the process has arrived, its priority is higher, and it has remaining work to be done
+		if(processes[p].arrivalTime <= currentTime && processes[p].prioNum <= highestPriority &&
+			processes[p].remainingBurstTime > 0) {
+				
+				// Check if the current process has a higher priority or if its burst time is lower and its arrival time is lower
+				if(processes[p].prioNum < highestPriority ||
+					(processes[p].prioNum == highestPriority &&
+					processes[p].remainingBurstTime < processes[nextProcess].remainingBurstTime &&
+					processes[p].arrivalTime < processes[nextProcess].arrivalTime)) {
+						
+						// Update the next process
+						nextProcess = p;
+						highestPriority = processes[p].prioNum;
+					}
+			}
+	}
+	
+	return nextProcess;
 }
 
 // Function to handle the case when no process is ready to execute
