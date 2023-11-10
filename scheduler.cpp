@@ -1,88 +1,9 @@
+#include "menu.h"
 #include "scheduler.h"
 #include "process_management.h"
 #include "helper.h"
 
 using namespace std;
-
-void menu() 
-{
-    int selection;
-    bool exit = false;
-
-    while (!exit) {
-        cout << "-----------------------------------------" << endl;
-        cout << "|       CPU Scheduling Algorithms       |" << endl;
-        cout << "-----------------------------------------" << endl;
-        cout << "|   1. Shortest Job First               |" << endl;
-        cout << "|   2. Preemptive Priority Based        |" << endl;
-        cout << "|   3. Shortest Remaining Time First    |" << endl;
-        cout << "|   4. Multilevel Feedback Queue        |" << endl;
-        cout << "|   5. Exit                             |" << endl;
-        cout << "-----------------------------------------" << endl;
-        cout << "\nEnter a selection: ";
-        cin.clear();
-        cin >> selection;
-
-
-        if(selection > 0 && selection < 5) {
-        	run(selection);  	
-		} else if(selection == 5) {
-			exit = true;
-		} else {
-			cout << "\nERROR: Invalid value. Please enter again." << endl;
-			system("pause");
-		}
-		system("cls");
-        cin.clear();
-    }
-}
-
-void run(int option)
-{
-	system("cls");
-
-    int numProcesses;
-    cout << "How many processes? ";
-    cin >> numProcesses;
-
-    if(numProcesses <= 0) {
-        cout << "Invalid number of processes" << endl;
-        return;
-    }
-    
-    vector<Process> processes(numProcesses);
-	vector<pair<char, int>> ganttChart;    
-    
-    switch(option) {
-    	case 1:
-    		initTable(numProcesses, processes);
-    		SJF(processes, ganttChart);
-    		printGanttChart(ganttChart);
-    		printResultTable(processes);
-    		break;
-    	case 2:
-    		initTablePrio(numProcesses, processes);
-    		PPB(processes, ganttChart);
-    		printGanttChart(ganttChart);
-    		printResultTablePrio(processes);
-    		break;
-    	case 3:
-    		initTable(numProcesses, processes);
-    		SRTF(processes, ganttChart);
-    		printGanttChart(ganttChart);
-    		printResultTable(processes);
-    		break;
-    	case 4:
-    		// MLFQ(processes, ganttChart);
-    		break;
-	}
-
-    // Print the Gantt chart and result table
-    
-    
-
-    system("pause");
-}
 
 // Shortest Job First (SJF) Algorithm
 void SJF(vector<Process>& processes, vector<pair<char, int>>& ganttChart) 
