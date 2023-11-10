@@ -1,5 +1,6 @@
 #include "scheduler.h"
-#include "process.h"
+#include "process_management.h"
+#include "helper.h"
 
 using namespace std;
 
@@ -186,19 +187,4 @@ void SRTF(vector<Process>& processes, vector<pair<char, int>>& ganttChart)
     }
 }
 
-void printGanttChart(const vector<pair<char, int>>& ganttChart) 
-{
-    cout << "\nGantt Chart:\n|";
-    char currentLabel = ' ';
-    int cumulativeDuration = 0;
-    for (const auto& entry : ganttChart) {
-        if (entry.first != currentLabel) {
-            if (currentLabel != ' ') {
-                cout << "(" << currentLabel << " " << cumulativeDuration << ") | ";
-            }
-            currentLabel = entry.first;
-        }
-        cumulativeDuration += entry.second;
-    }
-    cout << "(" << currentLabel << " " << cumulativeDuration << ") |" << endl;
-}
+
