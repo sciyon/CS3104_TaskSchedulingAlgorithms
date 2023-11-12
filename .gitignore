@@ -23,12 +23,10 @@
 # Compiled Static libraries
 *.lai
 *.la
-*.layout
 *.a
 *.lib
 
 # Executables
-*.exe
 *.out
 *.app
 
