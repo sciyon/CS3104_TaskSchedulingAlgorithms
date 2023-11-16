@@ -2,6 +2,28 @@
 
 using namespace std;
 
+
+//Function that will find process with smallest arrival time among available processes
+int findNextProcessByArrivalTime(const vector<Process>& processes, int currentTime) 
+{
+   int nextProcess = -1;
+   int smallestArrivalTime = INT_MAX;
+
+   for(unsigned p = 0; p < processes.size(); p++) {
+       // Check if the process has arrived and it has remaining work to be done
+       if(processes[p].arrivalTime <= currentTime && processes[p].remainingBurstTime > 0) {
+           // Check if the current process has an earlier arrival time
+           if(processes[p].arrivalTime < smallestArrivalTime) {
+               // Update the next process if an earlier arrival time is found
+               nextProcess = p;
+               smallestArrivalTime = processes[p].arrivalTime; // Update the smallest arrival time
+           }
+       }
+   }
+
+   return nextProcess;
+}
+
 // Function to find the process with the shortest remaining burst time among available processes
 int findShortestRemainingTimeProcess(const vector<Process>& processes, int currentTime) 
 {
@@ -54,6 +76,7 @@ int findHighestPriorityProcess(const vector<Process>& processes, int currentTime
 	
 	return nextProcess;
 }
+
 
 // Function to handle the case when no process is ready to execute
 void handleIdleTime(vector<Process>& processes, vector<pair<char, int>>& ganttChart, unsigned& currentTime) 

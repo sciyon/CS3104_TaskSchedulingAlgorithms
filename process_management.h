@@ -10,12 +10,14 @@ struct Process {
     int arrivalTime;
     int burstTime;
     int prioNum;
+    int queueLevel;
     int endTime;
     int turnaroundTime;
     int waitTime;
     int remainingBurstTime;
 };
 
+int findNextProcessByArrivalTime(const std::vector<Process>& processes, int currentTime);
 int findShortestRemainingTimeProcess(const std::vector<Process>& processes, int currentTime);
 int findHighestPriorityProcess(const std::vector<Process>& processes, int currentTime);
 void handleIdleTime(std::vector<Process>& processes, std::vector<std::pair<char, int>>& ganttChart, unsigned& currentTime);

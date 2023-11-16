@@ -15,9 +15,13 @@ void menu()
         selection = getUserChoice();
         
         switch (selection) {
-            case SJF_OPTION:
-            case PPB_OPTION:
+            case FCFS_OPTION:
+            case SJF_OPTION :
+            case NPPB_OPTION:
+            case PPB_OPTION :
+            case RR_OPTION:
             case SRTF_OPTION:
+            case MLQ_OPTION :
             case MLFQ_OPTION:
                 run(selection);
                 break;
@@ -35,7 +39,7 @@ void run(int option)
 {
 	system("cls");
 
-    int numProcesses;
+    int numProcesses, timeQuant;
     cout << "How many processes? ";
     cin >> numProcesses;
 
@@ -45,29 +49,57 @@ void run(int option)
     }
     
     vector<Process> processes(numProcesses);
-	vector<pair<char, int>> ganttChart;    
-    
+		vector<pair<char, int>> ganttChart;    
+    vector<int> mlq; 
+    vector<int> mlfq;
     switch(option) {
     	case 1:
+    		initTable(numProcesses, processes);
+    		FCFS(processes, ganttChart);
+    		printGanttChart(ganttChart);
+    		printResultTable(processes);
+    		break;
+    	case 2:
     		initTable(numProcesses, processes);
     		SJF(processes, ganttChart);
     		printGanttChart(ganttChart);
     		printResultTable(processes);
     		break;
-    	case 2:
+    	case 3:
+    		initTablePrio(numProcesses, processes);
+    		NPPB(processes, ganttChart);
+    		printGanttChart(ganttChart);
+    		printResultTablePrio(processes);
+    		break;
+    	case 4:
     		initTablePrio(numProcesses, processes);
     		PPB(processes, ganttChart);
     		printGanttChart(ganttChart);
     		printResultTablePrio(processes);
     		break;
-    	case 3:
+    	case 5:
+    		timeQuant = initTableRR(numProcesses, processes);
+    		RR(processes, ganttChart, timeQuant);
+    		printGanttChart(ganttChart);
+    		printResultTable(processes);
+    		break;
+    	case 6:
     		initTable(numProcesses, processes);
     		SRTF(processes, ganttChart);
     		printGanttChart(ganttChart);
     		printResultTable(processes);
     		break;
-    	case 4:
-    		// MLFQ(processes, ganttChart);
+    	case 7:
+    		initTableMLQ(numProcesses, processes, mlq);
+				MLQ(processes, ganttChart, mlq);
+    		printGanttChart(ganttChart);
+    		printResultTable(processes);
+    		break;
+    	case 8:
+    		initTableMLFQ(numProcesses, processes, mlfq);
+				MLQF(processes, ganttChart, mlfq);
+    		printGanttChart(ganttChart);
+    		printResultTable(processes);
     		break;
 	}
     
@@ -79,11 +111,15 @@ void displayMenu()
     cout << "-----------------------------------------" << endl;
     cout << "|       CPU Scheduling Algorithms       |" << endl;
     cout << "-----------------------------------------" << endl;
-    cout << "|   1. Shortest Job First               |" << endl;
-    cout << "|   2. Preemptive Priority Based        |" << endl;
-    cout << "|   3. Shortest Remaining Time First    |" << endl;
-    cout << "|   4. Multilevel Feedback Queue        |" << endl;
-    cout << "|   5. Exit                             |" << endl;
+    cout << "|   1. First Come First Serve           |" << endl;
+    cout << "|   2. Shortest Job First               |" << endl;
+    cout << "|   3. Non-preemptive Priority Based    |" << endl;
+    cout << "|   4. Preemptive Priority Based        |" << endl;
+    cout << "|   5. Round Robin                      |" << endl;
+    cout << "|   6. Shortest Remaining Time First    |" << endl;
+    cout << "|   7. Multilevel Queue                 |" << endl;
+    cout << "|   8. Multilevel Feedback Queue        |" << endl;
+    cout << "|   9. Exit                             |" << endl;
     cout << "-----------------------------------------" << endl;
     cout << "\nEnter a selection: ";
 }
